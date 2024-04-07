@@ -6,6 +6,7 @@ import asyncio
 
 class Message(BaseModel):
     id: str
+    sender_name: str
     content: str
 
 app = FastAPI()
@@ -18,7 +19,7 @@ async def root():
 
 @app.post("/send_message")
 async def send_message(message:Message):
-    print(ai_aroma_object.dict)
+    
     message = dict(message)
     result = await ai_aroma_object.on_message(message)
     print(result)
