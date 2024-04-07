@@ -13,6 +13,7 @@ app = FastAPI()
 
 ai_aroma_object = AIAroma()
 
+@app.head('/')
 @app.get("/")
 async def root():
     return {"message": "Hello from Xuân em yêu <3!"}
