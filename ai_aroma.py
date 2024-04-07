@@ -14,6 +14,15 @@ import os
 load_dotenv()
 import asyncio
 import pymongo
+import logging
+
+# Create a logger object
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+handler = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 client = pymongo.MongoClient(os.getenv('MONGODB_CONNECTION_STRING'))
 database = client["aroma_bakery"]
@@ -62,7 +71,7 @@ def check_inventory(customer_phone_number, order=[]):
     """"""
     deficient_product_list = []
     order = {x.name:x.quantity for x in order}
-    print(order)
+    logger.info(order)
     for product in list(order.keys()):
         if product not in product_list:
             return f"sản phẩn {product} không tồn tại. xin hãy chọn một trong các sản phẩm sau (nêu kèm số lượng): {data.keys()}"
@@ -80,7 +89,7 @@ def trigger(customer_phone_number, order):
         {'phone_number':customer_phone_number,
          'products': [dict(x) for x in order]}
     )
-    print(f"add order {result}")
+    logger.info(f"add order {result}")
     return f"Order thành công, chờ nghe điện thoại.\n gửi lại cho khách như sau:\nThông tin đơn hàng:\n số điện thoại: {customer_phone_number} \n danh sách sản phẩm: {order}"
 
 @tool("send_menu")
@@ -144,7 +153,7 @@ agent_with_chat_history = RunnableWithMessageHistory(
         history_messages_key="chat_history",
     )
 
-print("[INFO] Load AI successfully")
+logger.info("Load AI successfully")
 # AI IMPLEMENTATION #
 
 
@@ -157,7 +166,7 @@ class AIAroma():
         self.dict = {}
     async def on_message(self, message_data):
         id = message_data['id']
-        print(f"recieve {id} - {message_data['sender_name']}")
+        logger.info(f"recieve {id} - {message_data['sender_name']}")
         
         async with lock:
             if id in self.dict.keys():
@@ -166,10 +175,10 @@ class AIAroma():
                 self.dict[id] = [message_data]
 
         length_befor = len(self.dict[id])
-        print(f"length_befor: {length_befor}")
+        logger.info(f"length_befor: {length_befor}")
         await asyncio.sleep(self.waiting_time)
         length_after = len(self.dict[id])
-        print(f"length_after: {length_after}")
+        logger.info(f"length_after: {length_after}")
         
         if length_after>length_befor:
             return {
@@ -183,8 +192,8 @@ class AIAroma():
             )['output']
             async with lock:
                 self.dict.pop(id)
-                print(f"{id}: {input_message}")
-                print(f"AI reply to {id}: {output}")
+                logger.info(f"{id}: {input_message}")
+                logger.info(f"AI reply to {id}: {output}")
                 return {
                     'should_response':True,
                     'message':output

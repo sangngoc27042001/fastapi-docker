@@ -3,6 +3,7 @@ from uvicorn import run
 from ai_aroma import AIAroma
 from pydantic import BaseModel
 import asyncio
+import logging
 
 class Message(BaseModel):
     id: str
