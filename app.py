@@ -1,9 +1,8 @@
 from fastapi import FastAPI
 from uvicorn import run
-from ai_aroma import AIAroma
+from ai_aroma import AIAroma, logger
 from pydantic import BaseModel
-import asyncio
-import logging
+
 
 class Message(BaseModel):
     id: str
@@ -33,7 +32,7 @@ async def send_message(message:Message):
     
     message = dict(message)
     result = await ai_aroma_object.on_message(message)
-    print(result)
+    logger.info(str(result))
     return result
 
 # if __name__ == "__main__":
