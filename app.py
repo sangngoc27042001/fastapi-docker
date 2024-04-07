@@ -18,6 +18,15 @@ ai_aroma_object = AIAroma()
 async def root():
     return {"message": "Hello from Xuân em yêu <3!"}
 
+@app.head("/")
+@app.get("/")
+async def root():
+    return {"message": "Hello from Xuân em yêu <3!"}
+
+@app.get("/health")
+async def health_check():
+  return {"message": "OK"}
+
 @app.post("/send_message")
 async def send_message(message:Message):
     
