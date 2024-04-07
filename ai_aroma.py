@@ -157,7 +157,7 @@ class AIAroma():
         self.dict = {}
     async def on_message(self, message_data):
         id = message_data['id']
-        print(f"recieve {id}")
+        print(f"recieve {id} - {message_data['sender_name']}")
         
         async with lock:
             if id in self.dict.keys():
