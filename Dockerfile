@@ -1,18 +1,19 @@
-# Use the python:slim image as the base (replace version if needed)
 FROM python:3.10-slim
 
-# Set the working directory
+# Set working directory
 WORKDIR /app
 
-# Copy all application files and requirements.txt
-COPY . .
+# Copy all files from the current directory to the container's /app directory
+COPY . /app
 
+# Upgrade pip
 RUN pip install --upgrade pip
 
+# Install dependencies from requirements.txt
 RUN pip install -r requirements.txt
 
-# Expose the port used by your FastAPI app (usually 8000)
-EXPOSE 8000
+# Expose port 80
+EXPOSE 80
 
-# Run the Uvicorn server using CMD
-CMD [ "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Run the FastAPI app using Uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]

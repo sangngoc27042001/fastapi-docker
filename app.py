@@ -15,7 +15,7 @@ ai_aroma_object = AIAroma()
 
 @app.get("/")
 async def root():
-    return {"message": "Hello from FastAPI!"}
+    return {"message": "Hello from Xuân em yêu <3!"}
 
 @app.post("/send_message")
 async def send_message(message:Message):
