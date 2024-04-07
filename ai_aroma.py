@@ -181,8 +181,10 @@ class AIAroma():
                 {"input": input_message},
                 config={"configurable": {"session_id": id}},
             )['output']
-            self.dict.pop(id)
             async with lock:
+                self.dict.pop(id)
+                print(f"{id}: {input_message}")
+                print(f"AI reply to {id}: {output}")
                 return {
                     'should_response':True,
                     'message':output
